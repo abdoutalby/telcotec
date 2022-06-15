@@ -64,7 +64,7 @@ private  TextView tvtchargement;
                         webView.setVisibility(View.VISIBLE);
                     } }
                 });
-                webView.loadUrl(url.getText().toString());
+                webView.loadUrl("https://"+url.getText().toString());
 
                 WebSettings webSettings = webView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
