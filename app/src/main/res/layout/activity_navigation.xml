@@ -14,7 +14,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_weight="4"
+        android:layout_weight="2"
         android:id="@+id/back"
         >
         <ImageView
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:backgroundTint="#3787D0"
-
+            android:id="@+id/ETurl"
             android:hint="URL...">
 
         </com.google.android.material.textfield.TextInputEditText>
@@ -62,32 +62,21 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:text="Demarrer"
+            android:id="@+id/getUrlbtn"
             android:textColor="#E7EEF3"
             android:background="@drawable/btnback"
             android:textAllCaps="false"
             />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
 
-    </LinearLayout>
 
-<WebView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:visibility="invisible"
-    android:id="@+id/webView">
-
-</WebView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
+            android:id="@+id/tvtchargement"
             android:layout_height="wrap_content"
             android:text="Temps de la chargement de la page Web :"
             android:textColor="#000000"
@@ -97,6 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date :"
+            android:id="@+id/tvdate"
             android:textColor="#000000"
             android:layout_marginLeft="20dp"
             />
@@ -104,12 +94,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Heure :"
+            android:id="@+id/tvheure"
             android:textColor="#000000"
             android:layout_marginLeft="20dp"
             />
 
 
     </LinearLayout>
+
+<WebView
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="4"
+    android:visibility="invisible"
+
+    android:id="@+id/webView">
+
+</WebView>
 
 
 

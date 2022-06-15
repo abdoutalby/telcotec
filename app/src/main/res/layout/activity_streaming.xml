@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E5E5E5"
     tools:context=".Streaming">
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+     app:cardElevation="10dp"
+     >
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</androidx.cardview.widget.CardView>
+
+<com.google.android.material.textview.MaterialTextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Temps de la chargement de la vidéo :"
+    android:layout_centerVertical="true"
+    android:id="@+id/yttempsdechargement"
+    android:layout_marginLeft="20dp"
+    />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ytdure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/yttempsdechargement"
+        android:layout_marginLeft="20dp"
+        android:text="Durée :" />
 
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

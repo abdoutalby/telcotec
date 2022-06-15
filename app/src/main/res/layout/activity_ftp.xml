@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
      android:backgroundTint="#3787D0"
+     android:id="@+id/ftpAdress"
             android:hint="Adress FTP ...">
 
         </com.google.android.material.textfield.TextInputEditText>
@@ -62,8 +63,9 @@
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
+            android:id="@+id/ftpPort"
             android:backgroundTint="#3787D0"
-
+android:inputType="number"
             android:hint="Port ... ">
 
         </com.google.android.material.textfield.TextInputEditText>
@@ -80,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:backgroundTint="#3787D0"
-
+            android:id="@+id/ftplogin"
             android:hint="Login...">
 
         </com.google.android.material.textfield.TextInputEditText>
@@ -90,7 +92,8 @@
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:backgroundTint="#3787D0"
-
+android:inputType="textPassword"
+            android:id="@+id/ftppwd"
             android:hint="Mot de passe...">
 
         </com.google.android.material.textfield.TextInputEditText>
@@ -107,6 +110,7 @@
             android:textColor="#E7EEF3"
             android:background="@drawable/btnback"
             android:textAllCaps="false"
+            android:id="@+id/ftpconnecter"
             />
     </LinearLayout>
 
@@ -117,38 +121,42 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date fin :"
+            android:text="Date début : "
+            android:textColor="#000000"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ftpdd"
+            />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date fin : "
+            android:id="@+id/ftpdf"
             android:textColor="#000000"
             android:layout_marginLeft="20dp"
             />
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date fin :"
-            android:textColor="#000000"
             android:layout_marginLeft="20dp"
-            />
+            android:text="Latence: "
+            android:id="@+id/ftplatence"
+            android:textColor="#000000" />
+
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date fin :"
+            android:text="Débit en Mo/s: "
             android:textColor="#000000"
+            android:id="@+id/ftpdebit"
             android:layout_marginLeft="20dp"
-            />
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date fin :"
-            android:textColor="#000000"
-            android:layout_marginLeft="20dp"
-            />
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date fin :"
-            android:textColor="#000000"
-            android:layout_marginLeft="20dp"
-            />
+            />  <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Type :"
+        android:id="@+id/ftptype"
+        android:textColor="#000000"
+        android:layout_marginLeft="20dp"
+        />
 
     </LinearLayout>
 
@@ -162,6 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:weightSum="10"
+            android:id="@+id/ftpupladbtn"
             android:orientation="vertical">
             <ImageView
                 android:layout_weight="8"
@@ -173,13 +182,14 @@
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:textAlignment="center"
-                android:text="upload"/>
+                android:text="Upload"/>
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:weightSum="10"
+            android:id="@+id/ftpdownloadbtn"
             android:orientation="vertical">
             <ImageView
                 android:layout_weight="8"
@@ -191,7 +201,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:textAlignment="center"
-                android:text="upload"/>
+                android:text="Download"/>
         </LinearLayout>
     </LinearLayout>
 
