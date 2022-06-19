@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.telcotec.utils.DBHelper;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,6 +59,8 @@ public class Ftp extends AppCompatActivity {
     final String password = "k42bn57n";
     private  TextView res ;
     FTPClient ftpClient;
+
+    private DBHelper dbHelper;
      @RequiresApi(api = Build.VERSION_CODES.O)
      @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,7 @@ public class Ftp extends AppCompatActivity {
         res = findViewById(R.id.ftpres);
         debut = findViewById(R.id.ftpdd);
         debut.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss")));
-
+         dbHelper = new DBHelper(getApplicationContext());
 
           ftpClient = new FTPClient();
          connectbtn.setOnClickListener(  view->{
@@ -153,6 +157,8 @@ public class Ftp extends AppCompatActivity {
                             String rest = ftpClient.getReplyString();
                             Toast.makeText(getApplicationContext(), "error in file creating ", Toast.LENGTH_SHORT).show();
                             res.setText(rest.toString());
+
+                            dbHelper.saveftp(debut.getText().toString(),rest);
                         }
                     });
                 }
@@ -194,6 +200,7 @@ public class Ftp extends AppCompatActivity {
                                     String rest = ftpClient.getReplyString();
                                     Toast.makeText(getApplicationContext(), "Uploaded successfully ", Toast.LENGTH_SHORT).show();
                                     res.setText("Upload : "+rest);
+                                    dbHelper.saveftp(debut.getText().toString(),rest);
 
                                 }
                             });

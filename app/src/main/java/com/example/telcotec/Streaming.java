@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.telcotec.utils.DBHelper;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -55,6 +56,9 @@ public class Streaming extends YouTubeBaseActivity {
                                        ( System.currentTimeMillis() - pageLoadStartTime )
                                         +" ms"
                                         );
+                                DBHelper dbHelper = new DBHelper(getApplicationContext());
+                                dbHelper.savestreaming(duration.getText().toString(),time.getText().toString());
+                                Toast.makeText(getApplicationContext(), "data saved ", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

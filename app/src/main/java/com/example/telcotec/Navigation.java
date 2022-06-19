@@ -10,6 +10,9 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.telcotec.utils.DBHelper;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -24,6 +27,8 @@ private EditText url ;
 private TextView tvDate ;
 private  TextView tvHeure;
 private  TextView tvtchargement;
+
+private DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +67,9 @@ private  TextView tvtchargement;
                             int min = rightNow.get(Calendar.MINUTE);
                         tvHeure.setText("Heure : " +String.valueOf(hour)+":" +String.valueOf(min));
                         webView.setVisibility(View.VISIBLE);
+                        dbHelper = new DBHelper(getApplicationContext());
+                        dbHelper.saveweb(tvDate.getText().toString(),tvHeure.getText().toString(),tvtchargement.getText().toString());
+                            Toast.makeText(getApplicationContext(), "data saved", Toast.LENGTH_SHORT).show();
                     } }
                 });
                 webView.loadUrl("https://"+url.getText().toString());

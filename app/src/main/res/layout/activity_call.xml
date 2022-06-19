@@ -130,6 +130,12 @@
             android:layout_marginLeft="20dp"
             android:id="@+id/showDurationCall"
             />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:id="@+id/callsRV"
+            android:layout_marginLeft="10dp"
+            />
 
     </LinearLayout>
 
@@ -142,11 +148,7 @@
         android:orientation="vertical"
         android:gravity="bottom" >
 
-<TextView android:layout_gravity="center"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/calllist"
-    />
+
 
 <RelativeLayout
     android:gravity="end"
@@ -154,6 +156,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/getCalldetalisbtn">
+
     <ImageView
 
         android:layout_width="wrap_content"

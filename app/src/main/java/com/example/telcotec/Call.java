@@ -5,22 +5,24 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.CallLog;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -28,72 +30,97 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.telcotec.utils.CallData;
+import com.example.telcotec.utils.DBHelper;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Call extends AppCompatActivity {
 
-
-    private TextView operator ;
-    private TextView calltype ;
-    private TextView serial ;
-    private  TextView calllist;
-    private EditText phoneNumber ;
+    DBHelper dbHelper ;
+    private boolean calledFromhere=false;
+     private EditText phoneNumber ;
     private Button callbtn;
-    private Set<CallData> calls  ;
 
+    private RecyclerView callsRV;
 
     private RelativeLayout getCallDetailsBtn;
+    adapter adapter ;
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
-
         phoneNumber = findViewById(R.id.phonenumber);
         callbtn= findViewById(R.id.callbtn);
         getCallDetailsBtn = findViewById(R.id.getCalldetalisbtn);
-        calllist = findViewById(R.id.calllist);
-        operator = findViewById(R.id.phonenumbertv);
-        calltype = findViewById(R.id.tvcalltype);
+
+        callsRV = findViewById(R.id.callsRV);
 
         requestPermission(Manifest.permission.READ_CALL_LOG , 2);
-        requestPermission(Manifest.permission.READ_PHONE_STATE , 3);
-        requestPermission(Manifest.permission.READ_CONTACTS, 4);
 
-        getCallDetailsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getCallDetails();
-            }
-        });
+        getCallDetailsBtn.setOnClickListener(view -> {
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Cursor res = dbHelper.getCallHistory();
+                   if(res.getCount()==0) {
+                       Toast.makeText(Call.this, "no Call saved yet", Toast.LENGTH_SHORT).show();
+                    }else {
+                       handler.post(new Runnable() {
+                           @Override
+                           public void run() {
+                                ArrayList<CallData>  calls= new ArrayList<>();
+                               while (res.moveToNext()){
+                                   calls.add(new CallData(
+                                           res.getString(0),
+                                           res.getString(1),
+                                           res.getString(2),
+                                           res.getString(3),
+                                           res.getString(4)));
+                               }
+                               callsRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                               callsRV.setItemAnimator(new DefaultItemAnimator());
+                               adapter = new adapter(calls);
+                               callsRV.setAdapter(adapter);
 
-         callbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String number = phoneNumber.getText().toString();
-                Toast.makeText(getApplicationContext(), "calling "+number, Toast.LENGTH_SHORT).show();
-
-                if (!TextUtils.isEmpty(number)) {
-
-                        String call = "tel:" + number;
-                        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(call)) );
-                        getCallDetails();
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Enter a phone number", Toast.LENGTH_SHORT).show();
+                               Toast.makeText(getApplicationContext(), "clickedd", Toast.LENGTH_SHORT).show();
+                           }
+                       });
+                   }
                 }
-
-            }
+            });
         });
+
+         callbtn.setOnClickListener(view -> {
+             if(!checkPermission(Manifest.permission.CALL_PHONE)) {
+                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 145);
+
+             }
+                 String number = phoneNumber.getText().toString();
+                 Toast.makeText(getApplicationContext(), "calling " + number, Toast.LENGTH_SHORT).show();
+
+                 if (!TextUtils.isEmpty(number)) {
+
+                     String call = "tel:" + number;
+                     startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(call)));
+
+                 } else {
+                     Toast.makeText(getApplicationContext(), "Enter a phone number", Toast.LENGTH_SHORT).show();
+                 }
+
+
+         });
 
 
 
     }
+
 
 
     private boolean checkPermission(String permission) {
@@ -104,6 +131,43 @@ public class Call extends AppCompatActivity {
     }
 
 
+    private CallData getCallDetails() {
+         CallData c=new CallData("no", "no" , "no ", "no",  "d");
+        Cursor managedCursor = managedQuery( CallLog.Calls.CONTENT_URI,null, null,null, null);
+        int number = managedCursor.getColumnIndex( CallLog.Calls.NUMBER );
+        int type = managedCursor.getColumnIndex( CallLog.Calls.TYPE );
+        int date = managedCursor.getColumnIndex( CallLog.Calls.DATE);
+        int duration = managedCursor.getColumnIndex( CallLog.Calls.DURATION);
+        int n = managedCursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
+
+        if ( managedCursor.moveToFirst() ) {
+            String phNumber = managedCursor.getString( number );
+            String callType = managedCursor.getString( type );
+            String callDate = managedCursor.getString( date );
+            Date callDayTime = new Date(Long.valueOf(callDate));
+            String callDuration = managedCursor.getString( duration );
+            String name = managedCursor.getString(n);
+            String dir = null;
+            int dircode = Integer.parseInt( callType );
+            switch( dircode ) {
+                case CallLog.Calls.OUTGOING_TYPE:
+                    dir = "OUTGOING";
+                    break;
+
+                case CallLog.Calls.INCOMING_TYPE:
+                    dir = "INCOMING";
+                    break;
+
+                case CallLog.Calls.MISSED_TYPE:
+                    dir = "MISSED";
+                    break;
+            }
+              c = new CallData( phNumber ,name,callDuration,dir,callDayTime.toString() );
+
+        }
+        managedCursor.close();
+        return c;
+    }
 
 
     @Override
@@ -132,39 +196,54 @@ public class Call extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private String getCallDetails() {
+    public class adapter extends RecyclerView.Adapter<adapter.MyViewHolder>{
+        private ArrayList<CallData> calls;
 
-        DateFormat df = new SimpleDateFormat("dd:MM:yy:HH:mm:ss");
-        String stringOutput = "";
-        Uri uriCallLogs = Uri.parse("content://call_log/calls");
-        Cursor cursorCallLogs = getContentResolver().query(uriCallLogs, null,null,null);
-        cursorCallLogs.moveToFirst();
-        do {
+        public adapter(ArrayList<CallData> calls) {
+            this.calls = calls;
+        }
 
-            @SuppressLint("Range") String stringNumber =
-                    cursorCallLogs.getString(cursorCallLogs.getColumnIndex(CallLog.Calls.NUMBER));
-            @SuppressLint("Range") String stringDate = df.format(new Date(
-                    cursorCallLogs.getLong(cursorCallLogs.getColumnIndex(CallLog.Calls.DATE))));
-            @SuppressLint("Range") String stringDuration =
-                    cursorCallLogs.getString(cursorCallLogs.getColumnIndex(CallLog.Calls.DURATION));
-            @SuppressLint("Range") String stringType =
-                    cursorCallLogs.getString(cursorCallLogs.getColumnIndex(CallLog.Calls.TYPE));
-                CallData call = new CallData(stringNumber , stringDate,stringDuration,stringType);
-            stringOutput = stringOutput + call.toString()
-                    + "\n\n";
+        public  class  MyViewHolder extends RecyclerView.ViewHolder{
 
-            calls.add(new CallData(stringNumber , stringDate,stringDuration, stringType));
-        }while (cursorCallLogs.moveToNext());
+            private TextView number ;
+            private  TextView date ;
+            private TextView name ;
+            private TextView duration ;
 
-        calllist.setText(stringOutput);
-       return stringOutput;
+            public MyViewHolder(@NonNull View itemView ) {
+                super(itemView);
+                number = findViewById(R.id.rvnumber);
+                date = findViewById(R.id.rvdate);
+                name = findViewById(R.id.rvname);
+                duration = findViewById(R.id.rvduration);
 
+             }
+        }
+
+        @NonNull
+        @Override
+        public  adapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.callitem , parent ,false );
+            return  new MyViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull adapter.MyViewHolder  holder, int position) {
+            if (position > 0) {
+                holder.name.setText(calls.get(position).getName());
+                holder.duration.setText(calls.get(position).getDuration());
+                holder.number.setText(calls.get(position).getNumber());
+                holder.duration.setText(calls.get(position).getType());
+            }
+        }
+        @Override
+        public int getItemCount() {
+            return calls.size();
+        }
     }
-
-
-
 }
+
+
 
 
 

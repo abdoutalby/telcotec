@@ -1,16 +1,21 @@
 package com.example.telcotec.utils;
 
+import java.util.Date;
+
 public class CallData {
     String number ;
     String name ;
     String duration ;
     String type ;
+    String date ;
 
-    public CallData(String number, String name, String duration, String type) {
+    public CallData(String number, String name, String duration, String type , String date) {
         this.number = number;
         this.name = name;
         this.duration = duration;
         this.type = type;
+        this.date = date;
+
     }
 
     @Override
@@ -53,5 +58,13 @@ public class CallData {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
