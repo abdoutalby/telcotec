@@ -114,7 +114,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getCallHistory() {
         SQLiteDatabase DB = this.getWritableDatabase();
         Cursor managedCursor = DB.rawQuery("Select * from calls", null);
-
         return  managedCursor;
     }
 }
